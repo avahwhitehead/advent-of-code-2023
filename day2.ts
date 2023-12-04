@@ -54,6 +54,30 @@ function getFromRecord(dict: Record<string, number>, val: string) {
     return dict[val] || 0;
 }
 
+function getMinimumSet(game: Game): Round {
+    let max: Round = {};
+    for (let round of game.rounds) {
+        for (let key of Object.keys(round)) {
+            let currMax = getFromRecord(max, key);
+            let roundVal = getFromRecord(round, key);
+            if (roundVal > currMax) {
+                max[key] = roundVal;
+            }
+        }
+    }
+    return max;
+}
+
+function getPower(round: Round): number {
+    let v = 1;
+    for (let key of Object.keys(round)) {
+        v *= round[key];
+    }
+    return v;
+}
+
+const IS_PUZZLE_2 = true;
+
 function main() {
     let input = getInput();
 
@@ -62,9 +86,15 @@ function main() {
     for (let gamestr of input) {
         let game = parseGame(gamestr)
         
-        if (is_game_possible(game)) {
-            sum += game.id;
-            console.log(game.id, 'possible');
+        if (!IS_PUZZLE_2) {
+            if (is_game_possible(game)) {
+                sum += game.id;
+                console.log(game.id, 'possible');
+            }
+        } else {
+            let minset = getMinimumSet(game);
+            let power = getPower(minset);
+            sum += power;
         }
     }
     
