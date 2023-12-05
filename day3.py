@@ -1,3 +1,5 @@
+import math as maths
+
 def getInput() -> list[str]:
     with open('day3_input.txt', 'r') as f:
         res = f.readlines()
@@ -68,7 +70,6 @@ def getAdjacentParts(diagram: list[list[str or int or None]], row: int, col: int
 
     return partnos
 
-
 def sumPartNumbers(diagram: list[list[str or int or None]]) -> int:
     s = 0
 
@@ -85,10 +86,34 @@ def sumPartNumbers(diagram: list[list[str or int or None]]) -> int:
                 parts.append(p)
 
     return sum(parts)
+    return partnos
+
+def sumGearRatios(diagram: list[list[str or int or None]]) -> int:
+    s = 0
+
+    for r, row in enumerate(diagram):
+        for c, v in enumerate(row):
+            if v != '*':
+                continue
+
+            adj = getAdjacentParts(diagram, r, c)
+            if len(adj) != 2:
+                continue
+            
+            s += maths.prod(adj)
+
+    return s
 
 
 if __name__ == "__main__":
+    IS_PUZZLE_2 = True
+
     inp = getInput()
     diagram = parseDiagram(inp)
-    res = sumPartNumbers(diagram)
+
+    if not IS_PUZZLE_2:
+        res = sumPartNumbers(diagram)
+    else:
+        res = sumGearRatios(diagram)
+
     print(res)
