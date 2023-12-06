@@ -20,13 +20,18 @@ def parseLine(line: str) -> list[list[int]]:
         [int(i) for i in actual if i != '']
     ]
 
+def countWins(desired: list[int], actual: list[int]):
+    intersection = set(desired) & set(actual)
+    return len(intersection)
+
+
 def calculateWinnings(lines: list[list[int]]):
     points = 0
     for [desired, actual] in lines:
-        intersection = set(desired) & set(actual)
+        wins = countWins(desired, actual)
 
-        if len(intersection) > 0:
-            points += 2 ** (len(intersection) - 1)
+        if wins > 0:
+            points += 2 ** (wins - 1)
         
     return points
 
