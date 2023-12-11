@@ -1,3 +1,5 @@
+import math as maths
+
 def get_input() -> list[str]:
     with open('day6_input.txt', 'r') as f:
         res = f.readlines()
@@ -13,6 +15,13 @@ def parse_input(lines: list[str]) -> list[(int, int)]:
     distances = (int(i) for i in distances)
 
     return zip(times, distances)
+    
+
+def parse_input_kerning(lines: list[str]) -> (int, int):
+    time = lines[0].split(':')[1].replace(' ', '')
+    distance = lines[1].split(':')[1].replace(' ', '')
+
+    return (int(time), int(distance))
 
 
 def find_winning_times(time: int, min_distance: int) -> int:
@@ -31,13 +40,24 @@ def find_winning_times(time: int, min_distance: int) -> int:
 
 
 if __name__ == "__main__":
+    IS_PUZZLE_2 = True
+
     lines = get_input()
 
-    data = parse_input(lines)
+    if not IS_PUZZLE_2:
+        data = parse_input(lines)
+        
+        res = 1
+        for pair in data:
+            res *= find_winning_times(pair[0], pair[1])
+            print(pair, res)
+        
+        print(res)
 
-    res = 1
-    for pair in data:
-        res *= find_winning_times(pair[0], pair[1])
-        print(pair, res)
+    else:
+        (time, distance) = parse_input_kerning(lines)
+        
+        res = find_winning_times(time, distance)
+        
+        print(res)
 
-    print(res)
