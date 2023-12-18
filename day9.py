@@ -1,5 +1,4 @@
 import math as maths
-import re
 from typing import Self
 
 def get_input() -> list[str]:
@@ -27,29 +26,56 @@ def is_all_zero(seq: list[int]) -> bool:
 
 
 def predict_next_sequence_value(seq: list[int]) -> int:
-    initial_seq = seq
-
-    inc = 0
+    inc = seq[-1]
     while True:
         diffs = calculate_differences(seq)
         inc += diffs[-1]
         if is_all_zero(diffs):
-            return inc + initial_seq[-1]
+            return inc
+        
+        seq = diffs
+
+
+def predict_prev_sequence_value(seq: list[int]) -> int:
+    diff = [seq[0]]
+    while True:
+        diffs = calculate_differences(seq)
+        diff.insert(0, diffs[0])
+
+        if is_all_zero(diffs):
+            s = 0
+            for i in range(len(diff)):
+                s = diff[i] - s
+            return s
         
         seq = diffs
 
 
 if __name__ == "__main__":
+    IS_PUZZLE_2 = True
+
     lines = get_input()
 
     lines = parse_input(lines)
 
-    values_total = 0
+    if not IS_PUZZLE_2:
+        values_total = 0
 
-    for line in lines:
-        next_val = predict_next_sequence_value(line)
+        for line in lines:
+            next_val = predict_next_sequence_value(line)
 
-        values_total += next_val
+            values_total += next_val
 
-    print(values_total)
+        print(values_total)
 
+    else:
+        values_total = 0
+
+        for line in lines:
+            print(line)
+            prev_value = predict_prev_sequence_value(line)
+
+            values_total += prev_value
+            print(prev_value)
+
+        print(values_total)
